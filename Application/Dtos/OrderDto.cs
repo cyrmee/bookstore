@@ -1,6 +1,6 @@
 ﻿using Domain.Types;
 
-namespace Domain.Dtos;
+namespace Application.Dtos;
 
 public record OrderDto
 (

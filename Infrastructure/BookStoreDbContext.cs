@@ -22,13 +22,13 @@ public class BookStoreDbContext(
 		{
 			builder.Entity(entityType.ClrType)
 				.Property(nameof(IBaseEntity.CreatedAt))
-				.HasColumnType("timestamp")
+				.HasColumnType("timestamp with time zone")
 				.HasDefaultValueSql("CURRENT_TIMESTAMP")
 				.IsRequired();
 
 			builder.Entity(entityType.ClrType)
 				.Property(nameof(IBaseEntity.UpdatedAt))
-				.HasColumnType("timestamp")
+				.HasColumnType("timestamp with time zone")
 				.IsRequired();
 		}
 
@@ -37,7 +37,7 @@ public class BookStoreDbContext(
 		{
 			builder.Entity(entityType.ClrType)
 				.Property(nameof(ISoftDeletable.DeletedOn))
-				.HasColumnType("timestamp")
+				.HasColumnType("timestamp with time zone")
 				.HasDefaultValueSql("CURRENT_TIMESTAMP")
 				.IsRequired();
 		}

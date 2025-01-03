@@ -10,7 +10,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 	public void Configure(EntityTypeBuilder<Order> builder)
 	{
 		builder.Property(e => e.OrderDate)
-			.HasColumnType("timestamp")
+			.HasColumnType("timestamp with time zone")
 			.HasDefaultValueSql("CURRENT_TIMESTAMP")
 			.IsRequired();
 
