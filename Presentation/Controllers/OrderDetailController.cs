@@ -9,14 +9,9 @@ namespace Presentation.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class OrderDetailController : ControllerBase
+public class OrderDetailController(IOrderDetailService orderDetailService) : ControllerBase
 {
-    private readonly IOrderDetailService _orderDetailService;
-
-    public OrderDetailController(IOrderDetailService orderDetailService)
-    {
-        _orderDetailService = orderDetailService;
-    }
+    private readonly IOrderDetailService _orderDetailService = orderDetailService;
 
     [HttpGet]
     public async Task<ActionResult<List<OrderDetailDto>>> GetAllOrderDetails()

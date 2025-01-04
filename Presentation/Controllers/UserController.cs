@@ -12,18 +12,11 @@ namespace Presentation.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class UserController : ControllerBase
+public class UserController(UserManager<User> userManager, IAuthenticationService authenticationService, IMapper mapper) : ControllerBase
 {
-    private readonly UserManager<User> _userManager;
-    private readonly IAuthenticationService _authenticationService;
-    private readonly IMapper _mapper;
-
-    public UserController(UserManager<User> userManager, IAuthenticationService authenticationService, IMapper mapper)
-    {
-        _userManager = userManager;
-        _authenticationService = authenticationService;
-        _mapper = mapper;
-    }
+    private readonly UserManager<User> _userManager = userManager;
+    private readonly IAuthenticationService _authenticationService = authenticationService;
+    private readonly IMapper _mapper = mapper;
 
     [HttpGet("me")]
     public async Task<IActionResult> GetCurrentUser()

@@ -10,14 +10,9 @@ namespace Presentation.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class CategoryController : ControllerBase
+public class CategoryController(ICategoryService categoryService) : ControllerBase
 {
-    private readonly ICategoryService _categoryService;
-
-    public CategoryController(ICategoryService categoryService)
-    {
-        _categoryService = categoryService;
-    }
+    private readonly ICategoryService _categoryService = categoryService;
 
     [HttpGet]
     public async Task<ActionResult<List<CategoryDto>>> GetAllCategories()

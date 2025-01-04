@@ -10,14 +10,9 @@ namespace Presentation.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class BookCategoryController : ControllerBase
+public class BookCategoryController(IBookCategoryService bookCategoryService) : ControllerBase
 {
-    private readonly IBookCategoryService _bookCategoryService;
-
-    public BookCategoryController(IBookCategoryService bookCategoryService)
-    {
-        _bookCategoryService = bookCategoryService;
-    }
+    private readonly IBookCategoryService _bookCategoryService = bookCategoryService;
 
     [HttpGet]
     public async Task<ActionResult<List<BookCategoryDto>>> GetAllBookCategories()

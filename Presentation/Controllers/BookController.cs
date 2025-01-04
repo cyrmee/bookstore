@@ -11,14 +11,9 @@ namespace Presentation.Controllers;
 [ApiController]
 [Route("[controller]")]
 // [ServiceFilter(typeof(NotFoundFilter))]
-public class BookController : ControllerBase
+public class BookController(IBookService bookService) : ControllerBase
 {
-    private readonly IBookService _bookService;
-
-    public BookController(IBookService bookService)
-    {
-        _bookService = bookService;
-    }
+    private readonly IBookService _bookService = bookService;
 
     [HttpGet]
     public async Task<ActionResult<List<BookDto>>> GetAllBooks()
