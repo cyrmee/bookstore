@@ -12,6 +12,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 			.WithOne(e => e.User)
 			.HasPrincipalKey(e => e.UserName)
 			.HasForeignKey(e => e.UserName)
+			.OnDelete(DeleteBehavior.SetNull)
 			.IsRequired();
 	}
 }

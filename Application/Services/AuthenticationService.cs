@@ -141,7 +141,7 @@ public class AuthenticationService(UserManager<User> userManager, RoleManager<Id
         var tokenOptions = new JwtSecurityToken(
             issuer: configuration["JwtBearer:Issuer"],
             audience: configuration["JwtBearer:Audience"],
-            // claims: claims,
+            claims: claims,
             expires: expiration,
             signingCredentials: signingCredentials
         );

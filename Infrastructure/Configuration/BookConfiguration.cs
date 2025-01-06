@@ -36,11 +36,13 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
 		builder.HasMany(e => e.OrderDetails)
 			.WithOne(e => e.Book)
 			.HasForeignKey(e => e.BookId)
+			.OnDelete(DeleteBehavior.SetNull)
 			.IsRequired();
 
 		builder.HasMany(e => e.BookCategories)
 			.WithOne(e => e.Book)
 			.HasForeignKey(e => e.BookId)
+			.OnDelete(DeleteBehavior.Cascade)
 			.IsRequired();
 	}
 }

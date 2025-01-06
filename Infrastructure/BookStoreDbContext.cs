@@ -4,6 +4,7 @@ using Infrastructure.Configuration;
 using Infrastructure.Interceptors;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace Infrastructure;
 
@@ -43,6 +44,12 @@ public class BookStoreDbContext(
 		}
 
 		ModelBuilderConfiguration.Apply(builder);
+
+		builder.Entity<Book>().HasQueryFilter(r => !r.IsDeleted);
+		builder.Entity<Category>().HasQueryFilter(r => !r.IsDeleted);
+		builder.Entity<BookCategory>().HasQueryFilter(r => !r.IsDeleted);
+		builder.Entity<Order>().HasQueryFilter(r => !r.IsDeleted);
+		builder.Entity<OrderDetail>().HasQueryFilter(r => !r.IsDeleted);
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

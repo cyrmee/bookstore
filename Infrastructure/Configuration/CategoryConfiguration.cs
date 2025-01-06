@@ -15,6 +15,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 		builder.HasMany(e => e.BookCategories)
 			.WithOne(e => e.Category)
 			.HasForeignKey(e => e.CategoryId)
+			.OnDelete(DeleteBehavior.Cascade)
 			.IsRequired();
 	}
 }

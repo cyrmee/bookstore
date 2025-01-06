@@ -64,7 +64,7 @@ public abstract class ApplicationConfiguration
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = builder.Configuration["`:Issuer"],
+                    ValidIssuer = builder.Configuration["JwtBearer:Issuer"],
                     ValidAudience = builder.Configuration["JwtBearer:Audience"],
                     IssuerSigningKey =
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtBearer:Key"]!)),
