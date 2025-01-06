@@ -2,7 +2,6 @@
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
