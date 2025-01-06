@@ -163,7 +163,8 @@ public abstract class ApplicationConfiguration
     private static void ConfigureSerilogServices(WebApplicationBuilder builder)
     {
         Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information).Enrich
+            .MinimumLevel.Is(LogEventLevel.Information)
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning).Enrich
             .FromLogContext().Enrich
             .WithProperty("OS", Environment.OSVersion).Enrich
             .WithProperty("MachineName", Environment.MachineName).Enrich

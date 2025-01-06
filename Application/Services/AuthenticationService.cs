@@ -149,5 +149,5 @@ public class AuthenticationService(UserManager<User> userManager, RoleManager<Id
         return tokenOptions;
     }
 
-    public DateTime GetAccessTokenExpiration() => DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["JwtBearer:AccessTokenExpiration"]));
+    public DateTime GetAccessTokenExpiration() => DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["JwtBearer:TokenExpiration"]));
 }

@@ -6,6 +6,8 @@ using Domain.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
+using Presentation.Middlewares;
 
 namespace Presentation.Controllers;
 
@@ -22,12 +24,7 @@ public class UserController(UserManager<User> userManager, IAuthenticationServic
     public async Task<IActionResult> GetCurrentUser()
     {
         var username = User.Identity!.Name;
-        var user = await _userManager.FindByNameAsync(username!);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
+        var user = await _userManager.FindByNameAsync(username!) ?? throw new NotFoundException("User not found.");
 
         // Return user data
         return Ok(_mapper.Map<UserInfoDto>(user));
@@ -42,14 +39,14 @@ public class UserController(UserManager<User> userManager, IAuthenticationServic
             && await _userManager.CheckPasswordAsync(user, userLoginDto.Password))
         {
             if (await _userManager.IsLockedOutAsync(user))
-                return Unauthorized();
+                throw new UnauthorizedException("User is locked out. Please contact an administrator.");
             return Ok(new
             {
                 accessToken = await _authenticationService.GenerateAccessJwtToken(user),
                 accessTokenExpiration = _authenticationService.GetAccessTokenExpiration()
             });
         }
-        return NotFound();
+        throw new NotFoundException("User not found or incorrect password.");
     }
 
     [HttpPost("signup")]
@@ -60,7 +57,7 @@ public class UserController(UserManager<User> userManager, IAuthenticationServic
         {
             var userExists = await _userManager.FindByNameAsync(userSignupDto.UserName);
             if (userExists != null)
-                return Conflict("User already exists!");
+                throw new ConflictException("User already exists!");
 
             var user = _mapper.Map<User>(userSignupDto);
 
@@ -68,13 +65,13 @@ public class UserController(UserManager<User> userManager, IAuthenticationServic
             await _userManager.AddToRoleAsync(user, UserRole.Customer);
 
             if (!result.Succeeded)
-                return UnprocessableEntity("User creation failed! Please check user details and try again.");
+                throw new UnprocessableEntityException("User creation failed! Please check user details and try again.");
 
             return Ok("User created successfully!");
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            throw new BadRequestException(e.Message);
         }
     }
 
@@ -89,15 +86,19 @@ public class UserController(UserManager<User> userManager, IAuthenticationServic
             {
                 var result = await _userManager.ChangePasswordAsync(user, userChangePasswordDto.OldPassword, userChangePasswordDto.NewPassword);
 
-                if (!result.Succeeded) { return BadRequest(result.Errors); }
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    throw new BadRequestException(errors);
+                }
 
                 return Ok();
             }
             else
-                return Conflict("Old password incorrect!");
+                throw new ConflictException("Old password is incorrect!");
         }
 
-        return NotFound("User not found!");
+        throw new NotFoundException("User not found!");
     }
 
     [HttpPatch("lockUser")]
@@ -113,10 +114,10 @@ public class UserController(UserManager<User> userManager, IAuthenticationServic
 
             if (lockoutResult.Succeeded) return NoContent();
 
-            return BadRequest(lockoutResult.Errors);
+            throw new BadRequestException("Lockout failed!");
         }
 
-        return NotFound("User not found!");
+        throw new NotFoundException("User not found!");
     }
 
     [HttpPatch("unlockUser")]
@@ -133,9 +134,10 @@ public class UserController(UserManager<User> userManager, IAuthenticationServic
 
             if (unlockResult.Succeeded) return NoContent();
 
-            return BadRequest(unlockResult.Errors);
+            var errors = string.Join(", ", unlockResult.Errors.Select(e => e.Description));
+            throw new BadRequestException(errors);
         }
 
-        return NotFound("User not found!");
+        throw new NotFoundException("User not found!");
     }
 }
